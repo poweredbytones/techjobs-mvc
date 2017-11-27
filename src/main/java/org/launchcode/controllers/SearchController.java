@@ -38,11 +38,11 @@ public class SearchController {
 
         if(searchType.equals("all"))
         {
-            jobs = JobData.findAll();
+            jobs = JobData.findByValue(searchTerm);
         }
         else
         {
-            jobs = JobData.findByValue(searchTerm);
+            jobs = JobData.findByColumnAndValue(searchType, searchTerm);
         }
 
 
