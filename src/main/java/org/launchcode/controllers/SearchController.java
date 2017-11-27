@@ -24,17 +24,53 @@ public class SearchController {
         return "search";
     }
 
-    // TODO #1 - Create handler to process search request and display results
 
-    @RequestMapping(value = "results" , method = RequestMethod.GET)
+
+
+    @RequestMapping(value = "results", method = RequestMethod.GET)
+    public String search(Model model,
+                         @RequestParam("searchTerm") String searchTerm, @RequestParam("searchType") String searchType) {
+
+        ArrayList<HashMap<String,String>> jobs; // list of 'jobs' AKA each job is a HashMap of data...
+
+
+        model.addAttribute("headers", JobData.findAll().get(0).keySet() );
+
+        if(searchType.equals("all"))
+        {
+            jobs = JobData.findAll();
+        }
+        else
+        {
+            jobs = JobData.findByValue(searchTerm);
+        }
+
+
+
+        model.addAttribute("testdata", jobs);
+        return "searchResults";
+    }
+
+
+    @RequestMapping(value = "results2" , method = RequestMethod.GET)
     public String listColumnValues2(Model model) {
         //model.addAttribute("columns", ListController.columnChoices);
-        ArrayList<String> testData = new ArrayList<>();
-        testData.add("Green");
-        testData.add("red");
-        testData.add("alpha");
-        testData.add("stuff");
-        model.addAttribute("testdata", testData);
+        ArrayList<HashMap<String,String>> data = JobData.findByValue("java");
+        ArrayList<String> jobData = new ArrayList<>();
+
+        for( HashMap jobPair : data ) {
+            System.out.println(jobPair);
+            jobData.add(jobPair.get("employer").toString());
+        }
+
+        System.out.println(jobData.size());
+        System.out.println(data.size());
+
+        jobData.add("Green");
+        jobData.add("red");
+        jobData.add("alpha");
+        jobData.add("stuff");
+        model.addAttribute("testdata", jobData);
         return "searchResults";
 
     }
